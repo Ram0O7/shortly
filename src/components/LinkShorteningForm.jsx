@@ -39,7 +39,6 @@ const LinkShortener = ({ links, onAddLinks, onCopyLinks, device }) => {
               fullLink={fullLink}
               shortLink={shortLink}
               onCopyLinks={onCopyLinks}
-              id={id}
             />
           );
         })}

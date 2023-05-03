@@ -1,14 +1,15 @@
 import { useState } from "react";
 
-const Link = ({ fullLink, shortLink, onCopyLinks, id }) => {
-  const [copyStatus, setCopyStatus] = useState("Copy");
+const Link = ({ fullLink, shortLink }) => {
+  const [copied, setCopied] = useState(false);
   const clickHandler = () => {
     navigator.clipboard.writeText(shortLink);
-    if (copyStatus !== "Copy") {
-      alert("link already copied!");
+    if (copied) {
+      if (confirm("Link already copied!,you want to copy again?")) {
+        navigator.clipboard.writeText(shortLink);
+      }
     }
-    setCopyStatus("Copied !");
-    onCopyLinks(id);
+    setCopied(true);
   };
 
   return (
@@ -20,11 +21,11 @@ const Link = ({ fullLink, shortLink, onCopyLinks, id }) => {
         </a>
         <button
           className={
-            copyStatus === "Copy" ? "copy-btn" : "copy-btn copied-state"
+            !copied ? "copy-btn" : "copy-btn copied-state"
           }
           onClick={clickHandler}
         >
-          {copyStatus}
+          {!copied ? "Copy" : "Copied !"}
         </button>
       </div>
     </div>

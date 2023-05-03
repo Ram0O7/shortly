@@ -20,42 +20,39 @@ const getStorageLinks = () => {
 };
 
 export default function App() {
-  const [link, setLink] = useState(" ");
+  const [link, setLink] = useState("");
   const [shortLinks, setShortLinks] = useState(getStorageLinks());
   const [device, setDevice] = useState("desktop");
 
   const shortenLink = async () => {
-    try {
-      const response = await fetch(
-        `https://api.shrtco.de/v2/shorten?url=${link}/`
-      );
+    if (link !== "")
+      try {
+        const response = await fetch(
+          `https://api.shrtco.de/v2/shorten?url=${link}/`
+        );
 
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error);
-      }
-      console.log(data);
-      setShortLinks([
-        ...shortLinks,
-        {
-          id: data.result.code,
-          fullLink: data.result.original_link,
-          shortLink: data.result.short_link
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error);
         }
-      ]);
-    } catch (error) {
-      alert(error.message);
-    }
-  };
-
-  const updateLinks = (id) => {
-    const updatedLinks = shortLinks.filter((link) => link.id !== id);
-    setTimeout(() => setShortLinks(updatedLinks), 1500);
-    localStorage.setItem("links", JSON.stringify(shortLinks));
+        setShortLinks([
+          ...shortLinks,
+          {
+            id: data.result.code,
+            fullLink: data.result.original_link,
+            shortLink: data.result.short_link
+          }
+        ]);
+      } catch (error) {
+        alert(error.message);
+      }
   };
 
   useEffect(() => {
-    if (link !== " ") shortenLink();
+    const submittedLink = shortLinks.map(shortLink => shortLink.fullLink).filter(fullLink => fullLink.includes(link));
+    if (link !== " " && submittedLink.length === 0) {
+      shortenLink()
+    }
   }, [link]);
 
   useEffect(() => {
@@ -65,7 +62,7 @@ export default function App() {
   function myMediaFn(match) {
     if (match.matches) {
       setDevice("mobile");
-    } else{
+    } else {
       setDevice("desktop");
     }
   }
@@ -82,9 +79,8 @@ export default function App() {
       <Hero />
       <div className="main-container">
         <LinkShortener
-          links={shortLinks}
+          links={shortLinks.reverse()}
           onAddLinks={(link) => setLink(link)}
-          onCopyLinks={updateLinks}
           device={device}
         />
         <Features />
