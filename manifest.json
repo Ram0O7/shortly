@@ -1,0 +1,15 @@
+{
+  "short_name": "Shortly",
+  "name": "An efficient link shortener app",
+  "icons": [
+    {
+      "src": "illustration-working.svg",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
